@@ -32,7 +32,7 @@
           <div class="btn-group w-100 mb-3" role="group">
             <button type="button" class="btn btn-outline-primary" id="showUpi">UPI Payment</button>
             <button type="button" class="btn btn-outline-secondary" id="showQr">QR Payment</button>
-          </div>
+          </div><br>
 
           <!-- UPI Apps Section -->
           <div id="upiSection" style="display:none;">
@@ -41,7 +41,7 @@
               <a id="upiLink2" href="#" target="_blank"><img src="{{ url_for('static', filename='phonepe.png') }}" alt="PhonePe" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
               <a id="upiLink3" href="#" target="_blank"><img src="{{ url_for('static', filename='paytm.png') }}" alt="Paytm" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
               <a id="upiLink4" href="#" target="_blank"><img src="{{ url_for('static', filename='bhim.png') }}" alt="BHIM" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
-            </div>
+            </div><br>
           </div>
 
           <!-- QR Code Section -->
@@ -81,10 +81,10 @@
   const upi_id = "{{ settings.upi_id or '' }}";
   const receiver = "{{ settings.receiver_name or user.username }}";
 
-    function generateQR(amt){
+  function generateQR(amt){
     const name = document.querySelector('input[name="name"]').value.trim();
     const mobile = document.querySelector('input[name="mobile"]').value.trim();
-    const message = `${mobile} ${name}`; // Name + Mobile as message
+    const message = `${name} ${mobile}`; // Name + Mobile as message
     const upi_url = `upi://pay?pa=${encodeURIComponent(upi_id)}&pn=${encodeURIComponent(receiver)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(message)}`;
     
     // Set all UPI links
@@ -95,8 +95,17 @@
         qrContainer.innerHTML = "";
         new QRCode(qrContainer, { text: upi_url, width: 180, height: 180 });
     }
-}
+  }
 
+  // Show UPI section by default
+  document.getElementById("upiSection").style.display = "block";
+  document.getElementById("qrSection").style.display = "none";
+
+  // Generate QR/links on load
+  const initialAmount = parseFloat(amountInput.value || "0") || 0;
+  if (initialAmount > 0) generateQR(initialAmount);
+
+  // Event listeners
   document.getElementById("showUpi").addEventListener("click", function(){
     document.getElementById("upiSection").style.display = "block";
     document.getElementById("qrSection").style.display = "none";
@@ -115,8 +124,6 @@
     const v = parseFloat(amountInput.value || "0") || 0;
     if (v > 0) generateQR(v);
   });
-
-  const initVal = parseFloat(amountInput.value || "0") || 0;
-  if (initVal > 0) generateQR(initVal);
 </script>
+
 {% endblock %}
