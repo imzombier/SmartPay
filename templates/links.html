@@ -1,0 +1,57 @@
+{% extends '_layout.html' %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card p-3">
+      <h5 class="mb-3">Create Short Payment Link</h5>
+      <form method="post">
+        <div class="mb-2">
+          <label class="form-label">Payer Name (optional)</label>
+          <input class="form-control" name="name" placeholder="Customer name">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Mobile (optional)</label>
+          <input class="form-control" name="mobile" placeholder="10-digit mobile">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Amount (₹)</label>
+          <input class="form-control" name="amount" type="number" min="1" step="0.01" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Expires in (hours, optional)</label>
+          <input class="form-control" name="expiry_hours" type="number" min="1" placeholder="e.g. 24">
+        </div>
+        <button class="btn btn-primary w-100">Create Link</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card p-3">
+      <h5 class="mb-3">Your Links</h5>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead><tr>
+            <th>Code</th><th>Prefill</th><th>Expires</th><th>Link</th>
+          </tr></thead>
+          <tbody>
+            {% for l in items %}
+            <tr>
+              <td><code>{{ l.code }}</code></td>
+              <td>{{ l.name or '-' }} / {{ l.mobile or '-' }} / ₹{{ '%.2f'|format(l.amount or 0) }}</td>
+              <td>{{ l.expires_at or 'Never' }}</td>
+              <td>
+                <div class="input-group">
+                  <input class="form-control" value="{{ url_for('pay_code', code=l.code, _external=True) }}" readonly>
+                  <button class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText('{{ url_for('pay_code', code=l.code, _external=True) }}')">Copy</button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

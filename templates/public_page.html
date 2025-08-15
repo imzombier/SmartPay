@@ -1,0 +1,127 @@
+{% extends '_layout.html' %}
+{% block content %}
+<div class="card p-3">
+  <div class="d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">💳 {{ user.username|title }} — Payment</h4>
+    <a href="{{ url_for('login') }}" class="btn btn-outline-dark btn-sm">Admin</a>
+  </div>
+  <hr>
+
+  {% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-lg-6">
+      <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label">👤 Name</label>
+          <input type="text" name="name" class="form-control" placeholder="Enter your name" required value="{{ (preset.name if preset) or '' }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">📱 Mobile Number</label>
+          <input type="tel" name="mobile" class="form-control" placeholder="Enter mobile" pattern="[0-9]{10}" required value="{{ (preset.mobile if preset) or '' }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">💰 Amount (₹)</label>
+          <input type="number" name="amount" id="amountInput" class="form-control" value="{{ (preset.amount if preset) or (settings.default_amount or 0) }}" min="1" step="0.01" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">💳 Choose Payment Method</label>
+          <div class="btn-group w-100 mb-3" role="group">
+            <button type="button" class="btn btn-outline-primary" id="showUpi">UPI Payment</button>
+            <button type="button" class="btn btn-outline-secondary" id="showQr">QR Payment</button>
+          </div>
+
+          <!-- UPI Apps Section -->
+          <div id="upiSection" style="display:none;">
+            <div class="d-flex justify-content-center gap-3 mb-3">
+              <a id="upiLink1" href="#" target="_blank"><img src="{{ url_for('static', filename='gpay.png') }}" alt="GPay" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
+              <a id="upiLink2" href="#" target="_blank"><img src="{{ url_for('static', filename='phonepe.png') }}" alt="PhonePe" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
+              <a id="upiLink3" href="#" target="_blank"><img src="{{ url_for('static', filename='paytm.png') }}" alt="Paytm" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
+              <a id="upiLink4" href="#" target="_blank"><img src="{{ url_for('static', filename='bhim.png') }}" alt="BHIM" style="height:60px;object-fit:contain;border-radius:8px;background:white;padding:6px;box-shadow:0 6px 12px rgba(0,0,0,.18)"></a>
+            </div>
+          </div>
+
+          <!-- QR Code Section -->
+          <div id="qrSection" style="display:none;">
+            <div class="text-center">
+              <p class="mb-1">📷 Scan QR Code</p>
+              <div class="d-flex justify-content-center"><div id="qrContainer" style="padding:12px;border:3px solid #000;border-radius:10px;background:white;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">🖼 Upload Screenshot (required)</label>
+          <input type="file" name="screenshot" accept="image/*" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">✅ Submit Payment</button>
+      </form>
+    </div>
+
+    <div class="col-lg-6">
+      {% if short_code %}
+      <div class="card p-3">
+        <h6 class="mb-2">Share this link</h6>
+        <div class="input-group">
+          <input id="shareLink" class="form-control" value="{{ url_for('pay_code', code=short_code, _external=True) }}" readonly>
+          <button class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('shareLink').value)">Copy</button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="text-center mt-4" style="font-size:14px; color:#555;">
+    CashinGo page for <strong>{{ user.username }}</strong>
+  </div>
+</div>
+
+<script>
+  const amountInput = document.getElementById("amountInput");
+  const qrContainer = document.getElementById("qrContainer");
+  const upiLinks = [
+    document.getElementById("upiLink1"),
+    document.getElementById("upiLink2"),
+    document.getElementById("upiLink3"),
+    document.getElementById("upiLink4"),
+  ];
+
+  const upi_id = "{{ settings.upi_id or '' }}";
+  const receiver = "{{ settings.receiver_name or user.username }}";
+
+  function generateQR(amt){
+    const upi_url = `upi://pay?pa=${encodeURIComponent(upi_id)}&pn=${encodeURIComponent(receiver)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Payment')}`;
+    upiLinks.forEach(a => a.href = upi_url);
+    if (qrContainer){
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, { text: upi_url, width: 180, height: 180 });
+    }
+  }
+
+  document.getElementById("showUpi").addEventListener("click", function(){
+    document.getElementById("upiSection").style.display = "block";
+    document.getElementById("qrSection").style.display = "none";
+    const v = parseFloat(amountInput.value || "0") || 0;
+    if (v > 0) generateQR(v);
+  });
+
+  document.getElementById("showQr").addEventListener("click", function(){
+    document.getElementById("upiSection").style.display = "none";
+    document.getElementById("qrSection").style.display = "block";
+    const v = parseFloat(amountInput.value || "0") || 0;
+    if (v > 0) generateQR(v);
+  });
+
+  amountInput.addEventListener('input', () => {
+    const v = parseFloat(amountInput.value || "0") || 0;
+    if (v > 0) generateQR(v);
+  });
+
+  const initVal = parseFloat(amountInput.value || "0") || 0;
+  if (initVal > 0) generateQR(initVal);
+</script>
+{% endblock %}

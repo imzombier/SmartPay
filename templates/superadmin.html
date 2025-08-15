@@ -1,0 +1,58 @@
+{% extends '_layout.html' %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card p-3">
+      <h5 class="mb-3">All Users</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>ID</th><th>Email</th><th>Username</th><th>Slug</th><th>Role</th><th>Created</th></tr></thead>
+          <tbody>
+            {% for u in users %}
+            <tr>
+              <td>{{ u.id }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.username }}</td>
+              <td>{{ u.slug }}</td>
+              <td><span class="badge text-bg-{{ 'danger' if u.role=='superadmin' else ('secondary' if u.role=='admin' else 'primary') }}">{{ u.role }}</span></td>
+              <td>{{ u.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card p-3">
+      <h5 class="mb-3">All Payments</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr>
+            <th>ID</th><th>User</th><th>Name</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Time</th><th>Screenshot</th>
+          </tr></thead>
+          <tbody>
+            {% for p in payments %}
+            <tr class="{{ 'table-warning' if p.status=='Pending' else '' }}">
+              <td>{{ p.id }}</td>
+              <td>{{ p.user.username }}</td>
+              <td>{{ p.name or '-' }}</td>
+              <td>{{ p.mobile or '-' }}</td>
+              <td>₹{{ '%.2f'|format(p.amount) }}</td>
+              <td>{{ p.status }}</td>
+              <td>{{ p.created_at|ts_to_string }}</td>
+              <td>
+                {% if p.screenshot %}
+                <a href="{{ url_for('uploaded_file', filename=p.screenshot) }}" target="_blank">View</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

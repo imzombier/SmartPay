@@ -1,0 +1,41 @@
+{% extends '_layout.html' %}
+{% block content %}
+<div class="card p-3">
+  <h5 class="mb-3">Payments</h5>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Mobile</th><th>Amount</th>
+          <th>Screenshot</th><th>Status</th><th>Time</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in items %}
+        <tr class="{{ 'table-warning' if p.status=='Pending' else '' }}">
+          <td>{{ p.id }}</td>
+          <td>{{ p.name or '-' }}</td>
+          <td>{{ p.mobile or '-' }}</td>
+          <td>₹{{ '%.2f'|format(p.amount) }}</td>
+          <td>
+            {% if p.screenshot %}
+              <a href="{{ url_for('uploaded_file', filename=p.screenshot) }}" target="_blank">
+                <img src="{{ url_for('uploaded_file', filename=p.screenshot) }}" style="height:60px;object-fit:cover;border-radius:6px;">
+              </a>
+            {% endif %}
+          </td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.created_at|ts_to_string }}</td>
+          <td class="d-flex gap-1">
+            {% if p.status=='Pending' %}
+              <a class="btn btn-sm btn-success" href="{{ url_for('approve', pid=p.id) }}">Approve</a>
+            {% endif %}
+            <a class="btn btn-sm btn-danger" href="{{ url_for('delete_payment', pid=p.id) }}" onclick="return confirm('Delete payment?')">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
