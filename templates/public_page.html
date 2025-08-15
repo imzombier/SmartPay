@@ -81,14 +81,21 @@
   const upi_id = "{{ settings.upi_id or '' }}";
   const receiver = "{{ settings.receiver_name or user.username }}";
 
-  function generateQR(amt){
-    const upi_url = `upi://pay?pa=${encodeURIComponent(upi_id)}&pn=${encodeURIComponent(receiver)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Payment')}`;
+    function generateQR(amt){
+    const name = document.querySelector('input[name="name"]').value.trim();
+    const mobile = document.querySelector('input[name="mobile"]').value.trim();
+    const message = `${mobile} ${name}`; // Name + Mobile as message
+    const upi_url = `upi://pay?pa=${encodeURIComponent(upi_id)}&pn=${encodeURIComponent(receiver)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(message)}`;
+    
+    // Set all UPI links
     upiLinks.forEach(a => a.href = upi_url);
+
+    // Generate QR code
     if (qrContainer){
-      qrContainer.innerHTML = "";
-      new QRCode(qrContainer, { text: upi_url, width: 180, height: 180 });
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, { text: upi_url, width: 180, height: 180 });
     }
-  }
+}
 
   document.getElementById("showUpi").addEventListener("click", function(){
     document.getElementById("upiSection").style.display = "block";
