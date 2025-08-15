@@ -412,16 +412,6 @@ def public_page(slug):
 
     return render_template('public_page.html', settings=settings, user=user, success=success, preset=None, short_code=None)
 
-@app.route("/public_page/<username>")
-def public_page(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    settings = Settings.query.first()
-    return render_template(
-        "public_page.html",
-        user=user,
-        settings=settings,
-        hide_login=True
-    )
 
 
 # ---------------- Super Admin ----------------
