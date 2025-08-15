@@ -20,9 +20,10 @@ TEMPLATES_FOLDER = APP_ROOT / "templates"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 
-app = Flask(__name__, template_folder=str(TEMPLATES_FOLDER), static_folder=str(STATIC_FOLDER), static_url_path="/static")
-app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
-app.config['MAX_CONTENT_LENGTH'] = 25 * 1024 * 1024  # 25 MB
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 # secrets & db url from env
 app.secret_key = os.environ.get("CASHINGO_SECRET", "change_me_in_prod")
@@ -38,10 +39,10 @@ db = SQLAlchemy(app)
 
 # ---------------- Models ----------------
 class User(db.Model):
-    __tablename__ = 'users'
-    id          = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.String(255), unique=True, nullable=False)
-    username    = db.Column(db.String(80), unique=True, nullable=False)
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    username = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     slug        = db.Column(db.String(120), unique=True, nullable=False)
     role        = db.Column(db.String(20), default="user")  # user | admin | superadmin
@@ -124,6 +125,10 @@ def role_required(*roles):
             return view(*args, **kwargs)
         return wrapper
     return deco
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 @app.template_filter('ts_to_string')
 def ts_to_string(ts):
