@@ -17,9 +17,12 @@
 </head>
 
 <body>
+  <!-- Navbar with logo -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container">
-      <a class="navbar-brand" href="#">SmartPay</a>
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='smartpay.png') }}" alt="SmartPay" height="40" class="d-inline-block align-text-top">
+      </a>
       <div class="ms-auto d-flex gap-2">
         {% if not hide_login %}
           {% if session.get('uid') %}
@@ -33,6 +36,7 @@
     </div>
   </nav>
 
+  <!-- Main container -->
   <div class="container my-4">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -44,8 +48,11 @@
 
     {% block content %}{% endblock %}
   </div>
+
+  <!-- Footer -->
   <div class="text-center mt-4" style="font-size:14px; color:#555;"> 
-    SmartPay Developed By <a href="mailto:kona.krishna1997@gmail.com" style="color:#007bff; text-decoration:none;">Krishna Naidu</a>
+    SmartPay Developed By 
+    <a href="mailto:kona.krishna1997@gmail.com" style="color:#007bff; text-decoration:none;">Krishna Naidu</a>
   </div>
 </body>
 </html>
