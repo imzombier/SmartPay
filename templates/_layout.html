@@ -13,6 +13,13 @@
   <style>
     body { background:#f6f8fb; }
     .card { box-shadow:0 4px 20px rgba(0,0,0,0.05); border-radius:14px; }
+
+    .navbar-logo {
+    height: 100px;       /* Adjust this to a comfortable size */
+    width: auto;        /* Keeps aspect ratio */
+    vertical-align: middle; /* Aligns nicely with text/buttons */
+}
+
   </style>
 </head>
 
@@ -21,7 +28,7 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary py-2">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{{ url_for('static', filename='smartpay.png') }}" alt="SmartPay" style="height:120px; margin-right:8px;"> </a>
+        <img src="{{ url_for('static', filename='smartpay.png') }}" alt="SmartPay Logo" class="navbar-logo">
       <div class="ms-auto d-flex gap-2">
         {% if not hide_login %}
           {% if session.get('uid') %}
