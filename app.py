@@ -376,10 +376,16 @@ def pay_code(code):
             db.session.commit()
             success = f"✅ ₹{amount:.2f} payment submitted successfully. Awaiting approval."
 
-    return render_template('public_page.html',
-                           settings=settings, user=user, success=success,
-                           preset={'name': pl.name, 'mobile': pl.mobile, 'amount': pl.amount},
-                           short_code=pl.code)
+    return render_template(
+    'public_page.html',
+    settings=settings,
+    user=user,
+    success=success,
+    preset={'name': pl.name, 'mobile': pl.mobile, 'amount': pl.amount},
+    short_code=pl.code,
+    hide_login=True   # ← add this
+)
+
 
 # ---------------- Public page for each user ----------------
 @app.route('/u/<slug>', methods=['GET','POST'])
