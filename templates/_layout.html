@@ -18,7 +18,6 @@
       <div class="ms-auto d-flex gap-2">
         {% if session.get('uid') %}
           <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard') }}">Dashboard</a>
-          <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('links') }}">Short Links</a>
           <a class="btn btn-danger btn-sm" href="{{ url_for('logout') }}">Logout</a>
         {% else %}
           <a class="btn btn-primary btn-sm" href="{{ url_for('login') }}">Login</a>
