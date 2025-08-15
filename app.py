@@ -410,7 +410,15 @@ def public_page(slug):
             db.session.commit()
             success = f"✅ ₹{amount:.2f} payment submitted successfully. Awaiting approval."
 
-    return render_template('public_page.html', settings=settings, user=user, success=success, preset=None, short_code=None)
+    return render_template(
+    'public_page.html',
+    settings=settings,
+    user=user,
+    success=success,
+    preset=None,
+    short_code=None,
+    hide_login=True   # ← add this flag
+)
 
 
 
