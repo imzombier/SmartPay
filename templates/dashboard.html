@@ -4,15 +4,35 @@
   <div class="col-lg-6">
     <div class="card p-3">
       <h5 class="mb-3">Your Public Payment Page</h5>
+
+      <!-- Public Link Input -->
       <div class="input-group mb-2">
+        <span class="input-group-text">
+          <img src="{{ url_for('static', filename='link.png') }}" alt="Link" style="width:20px; height:20px;">
+        </span>
         <input id="publicLink" class="form-control" value="{{ public_link }}" readonly>
         <button class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('publicLink').value)">Copy</button>
       </div>
-      <a class="btn btn-outline-primary btn-sm" target="_blank" href="{{ public_link }}">Open</a>
-      <span class="ms-3">Pending: <span class="badge text-bg-warning">{{ pending }}</span></span>
-      <span class="ms-3">Generate Link: <span class="badge text-bg-secondary">{{ short_count }}</span></span>
+
+      <!-- Open Button -->
+      <a class="btn btn-outline-primary btn-sm mb-2" target="_blank" href="{{ public_link }}">Open</a>
+
+      <!-- Pending & Generate Link Row -->
+      <div class="d-flex gap-3 align-items-center mt-2">
+        <span class="d-flex align-items-center">
+          <img src="{{ url_for('static', filename='pending.png') }}" alt="Pending" style="width:20px; height:20px; margin-right:5px;">
+          Pending: <span class="badge text-bg-warning ms-1">{{ pending }}</span>
+        </span>
+
+        <span class="d-flex align-items-center">
+          <img src="{{ url_for('static', filename='link.png') }}" alt="Generate Link" style="width:20px; height:20px; margin-right:5px;">
+          Generate Link: <span class="badge text-bg-secondary ms-1">{{ short_count }}</span>
+        </span>
+      </div>
     </div>
   </div>
+</div>
+
 
   <div class="col-lg-6">
     <div class="card p-3">
