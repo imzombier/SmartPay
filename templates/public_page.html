@@ -3,7 +3,7 @@
 <div class="card p-3">
   <div class="d-flex justify-content-between align-items-center">
     <h4 class="mb-0">💳 {{ user.username|title }} — Payment</h4>
-    <a href="{{ url_for('login') }}" class="btn btn-outline-dark btn-sm">Admin</a>
+   
   </div>
   <hr>
 
@@ -60,18 +60,6 @@
 
         <button type="submit" class="btn btn-success w-100">✅ Submit Payment</button>
       </form>
-    </div>
-
-    <div class="col-lg-6">
-      {% if short_code %}
-      <div class="card p-3">
-        <h6 class="mb-2">Share this link</h6>
-        <div class="input-group">
-          <input id="shareLink" class="form-control" value="{{ url_for('pay_code', code=short_code, _external=True) }}" readonly>
-          <button class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('shareLink').value)">Copy</button>
-        </div>
-      </div>
-      {% endif %}
     </div>
   </div>
 
