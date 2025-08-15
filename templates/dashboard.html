@@ -10,7 +10,7 @@
       </div>
       <a class="btn btn-outline-primary btn-sm" target="_blank" href="{{ public_link }}">Open</a>
       <span class="ms-3">Pending: <span class="badge text-bg-warning">{{ pending }}</span></span>
-      <span class="ms-3">Short Links: <span class="badge text-bg-secondary">{{ short_count }}</span></span>
+      <span class="ms-3">Generate Link: <span class="badge text-bg-secondary">{{ short_count }}</span></span>
     </div>
   </div>
 
@@ -18,26 +18,54 @@
     <div class="card p-3">
       <h5 class="mb-3">Settings</h5>
       <form method="post">
+        <!-- UPI ID -->
         <div class="mb-2">
           <label class="form-label">UPI ID</label>
-          <input name="upi_id" class="form-control" value="{{ settings.upi_id }}" placeholder="example@ybl">
+          <div class="input-group">
+            <span class="input-group-text">
+              <img src="{{ url_for('static', filename='upi.png') }}" alt="UPI" style="width:20px; height:20px;">
+            </span>
+            <input name="upi_id" class="form-control" value="{{ settings.upi_id }}" placeholder="example@ybl">
+          </div>
         </div>
+
+        <!-- Receiver Name -->
         <div class="mb-2">
           <label class="form-label">Receiver Name</label>
-          <input name="receiver_name" class="form-control" value="{{ settings.receiver_name }}">
+          <div class="input-group">
+            <span class="input-group-text">
+              <img src="{{ url_for('static', filename='men.png') }}" alt="Receiver" style="width:20px; height:20px;">
+            </span>
+            <input name="receiver_name" class="form-control" value="{{ settings.receiver_name }}">
+          </div>
         </div>
+
+        <!-- Loan/Reference -->
         <div class="mb-2">
           <label class="form-label">Loan/Reference</label>
-          <input name="loan_number" class="form-control" value="{{ settings.loan_number }}">
+          <div class="input-group">
+            <span class="input-group-text">
+              <img src="{{ url_for('static', filename='doc.png') }}" alt="Loan" style="width:20px; height:20px;">
+            </span>
+            <input name="loan_number" class="form-control" value="{{ settings.loan_number }}">
+          </div>
         </div>
+
+        <!-- Default Amount -->
         <div class="mb-2">
           <label class="form-label">Default Amount (₹)</label>
-          <input name="default_amount" type="number" step="0.01" class="form-control" value="{{ settings.default_amount }}">
+          <div class="input-group">
+            <span class="input-group-text">
+              <img src="{{ url_for('static', filename='cash.png') }}" alt="Amount" style="width:20px; height:20px;">
+            </span>
+            <input name="default_amount" type="number" step="0.01" class="form-control" value="{{ settings.default_amount }}">
+          </div>
         </div>
+
         <div class="d-flex gap-2">
           <button class="btn btn-primary">Save</button>
           <a class="btn btn-outline-secondary" href="{{ url_for('my_payments') }}">View Payments</a>
-          <a class="btn btn-outline-secondary" href="{{ url_for('links') }}">Short Links</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('links') }}">Generate Link</a>
         </div>
       </form>
     </div>
