@@ -13,17 +13,16 @@
   <style>
     body { background:#f6f8fb; }
     .card { box-shadow:0 4px 20px rgba(0,0,0,0.05); border-radius:14px; }
-
-
   </style>
 </head>
 
 <body>
   <!-- Navbar with logo -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary py-2">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="{{ url_for('static', filename='smartpay1.png') }}" alt="SmartPay Logo" class="navbar-logo">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='smartpay.png') }}" alt="SmartPay" height="40" class="d-inline-block align-text-top">
+      </a>
       <div class="ms-auto d-flex gap-2">
         {% if not hide_login %}
           {% if session.get('uid') %}
